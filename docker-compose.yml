@@ -1,0 +1,47 @@
+services:
+  mysql:
+    image: mysql
+    environment:
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_HOST: ${DB_HOST}
+      MYSQL_PORT: ${DB_PORT}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db-data:/var/lib/mysql
+    healthcheck:
+      test: '/usr/bin/mysql --host=$$MYSQL_HOST --port=MYSQL_PORT --user=$$MYSQL_USER --password=$$MYSQL_PASSWORD --execute "SHOW DATABASES;"'
+      interval: 2s
+      timeout: 20s
+      retries: 10
+    # Uncomment to expose the port to the host machine
+    #ports:
+    #- ${DB_PORT}:${DB_PORT}
+
+  # If you want to use the container in production mode, modify the fields with XXX
+  api:
+    build:
+      dockerfile: Dockerfile
+      context: .
+      target: development # XXX: development/production
+    depends_on:
+      mysql:
+        condition: service_healthy
+    tty: true
+    command: ['/bin/sh', '/usr/src/app/bin/start-dev.sh'] # XXX: start-dev.sh/start-prod.sh
+    env_file:
+      - .env
+    volumes:
+      - .env:/usr/src/app/.env:ro
+      - /usr/src/app/node_modules
+      - .:/usr/src/app
+    ports:
+      - ${API_PORT}
+
+volumes:
+  db-data:
+
+networks:
+  default:
+    name: agdb-next-network
