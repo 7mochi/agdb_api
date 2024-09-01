@@ -7,5 +7,8 @@ docker-run:
 docker-run-bg:
 	docker compose up -d api mysql
 
+stop:
+	docker compose down
+
 docker-logs:
 	docker compose logs -f
