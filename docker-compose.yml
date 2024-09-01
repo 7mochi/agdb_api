@@ -1,17 +1,18 @@
 services:
   mysql:
-    image: mysql
+    image: mariadb
     environment:
-      MYSQL_USER: ${DB_USERNAME}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-      MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_HOST: ${DB_HOST}
-      MYSQL_PORT: ${DB_PORT}
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MARIADB_USER: ${DB_USERNAME}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_DATABASE: ${DB_DATABASE}
+      MARIADB_HOST: ${DB_HOST}
+      MARIADB_PORT: ${DB_PORT}
+      MYSQL_TCP_PORT: ${DB_PORT}
+      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
     volumes:
       - db-data:/var/lib/mysql
     healthcheck:
-      test: '/usr/bin/mysql --host=$$MYSQL_HOST --port=MYSQL_PORT --user=$$MYSQL_USER --password=$$MYSQL_PASSWORD --execute "SHOW DATABASES;"'
+      test: '/usr/bin/mysql --host=$$MARIADB_HOST --port=MARIADB_PORT --user=$$MARIADB_USER --password=$$MARIADB_PASSWORD --execute "SHOW DATABASES;"'
       interval: 2s
       timeout: 20s
       retries: 10
