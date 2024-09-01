@@ -1,11 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-echo "Loading environment variables from .env (Production)"
-set -a
-. ./.env
-set +a
-
+echo "bv"
 # Checking the database connection
 bin/wait-for-it.sh $DB_HOST:$DB_PORT
 

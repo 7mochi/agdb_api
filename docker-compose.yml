@@ -12,7 +12,7 @@ services:
     volumes:
       - db-data:/var/lib/mysql
     healthcheck:
-      test: '/usr/bin/mysql --host=$$MARIADB_HOST --port=MARIADB_PORT --user=$$MARIADB_USER --password=$$MARIADB_PASSWORD --execute "SHOW DATABASES;"'
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       interval: 2s
       timeout: 20s
       retries: 10
@@ -25,20 +25,24 @@ services:
     build:
       dockerfile: Dockerfile
       context: .
-      target: development # XXX: development/production
     depends_on:
       mysql:
         condition: service_healthy
     tty: true
-    command: ['/bin/sh', '/usr/src/app/bin/start-dev.sh'] # XXX: start-dev.sh/start-prod.sh
-    env_file:
-      - .env
+    command: ['/bin/sh', '/app/bin/start.sh']
+    environment:
+      - API_PORT=${API_PORT}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_SYNCHRONIZE=${DB_SYNCHRONIZE}
+      - STEAM_API_KEY=${STEAM_API_KEY}
     volumes:
-      - .env:/usr/src/app/.env:ro
-      - /usr/src/app/node_modules
-      - .:/usr/src/app
+      - .:/app/
     ports:
-      - ${API_PORT}
+      - ${API_PORT}:${API_PORT}
 
 volumes:
   db-data:
