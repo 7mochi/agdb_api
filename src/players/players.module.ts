@@ -5,9 +5,17 @@ import { Player } from './player.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HistoriesModule } from 'src/histories/histories.module';
 import { AuthModule } from 'src/auth/auth.module';
+import { HttpModule } from '@nestjs/axios';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Player]), HistoriesModule, AuthModule],
+  imports: [
+    TypeOrmModule.forFeature([Player]),
+    HistoriesModule,
+    AuthModule,
+    ConfigModule,
+    HttpModule,
+  ],
   providers: [PlayersService],
   exports: [PlayersService],
   controllers: [PlayersController],

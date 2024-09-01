@@ -18,6 +18,7 @@ import { ConfigModule } from '@nestjs/config';
         DB_PASSWORD: Joi.string().required(),
         DB_DATABASE: Joi.string().required(),
         DB_SYNCHRONIZE: Joi.boolean().required(),
+        STEAM_API_KEY: Joi.string().required(),
       }),
     }),
     DatabaseModule,
