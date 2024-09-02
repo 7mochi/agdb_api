@@ -2,7 +2,7 @@ FROM node:lts-bullseye-slim AS development
 
 RUN apt-get update && apt-get install -y procps openssl
 
-WORKDIR /srv/root
+WORKDIR /usr/src/app
 
 COPY --chown=node:node package.json yarn.lock ./
 
@@ -14,10 +14,10 @@ USER node
 
 FROM node:lts-bullseye-slim AS build
 
-WORKDIR /srv/root
+WORKDIR /usr/src/app
 
 COPY --chown=node:node package.json yarn.lock ./
-COPY --chown=node:node --from=development /srv/root/node_modules ./node_modules
+COPY --chown=node:node --from=development /usr/src/app/node_modules ./node_modules
 COPY --chown=node:node . .
 
 RUN yarn agdb-build
@@ -29,8 +29,8 @@ USER node
 
 FROM node:lts-bullseye-slim AS production
 
-COPY --chown=node:node --from=build /srv/root/node_modules ./node_modules
-COPY --chown=node:node --from=build /srv/root/dist ./dist
-COPY --chown=node:node --from=build /srv/root/scripts/*.sh ./scripts/
+COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
+COPY --chown=node:node --from=build /usr/src/app/dist ./dist
+COPY --chown=node:node --from=build /usr/src/app/scripts/*.sh ./scripts/
 
 USER node

@@ -29,7 +29,7 @@ services:
       mysql:
         condition: service_healthy
     tty: true
-    command: ['/bin/sh', '/srv/root/scripts/start-prod.sh']
+    command: ['/bin/sh', '/usr/src/app/scripts/start-prod.sh']
     environment:
       - API_PORT=${API_PORT}
       - DB_HOST=${DB_HOST}
