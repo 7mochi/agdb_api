@@ -17,7 +17,7 @@ docker-prod-run-bg:
 	docker compose -f docker-compose.prod.yml up -d api mysql
 
 docker-prod-stop:
-    docker compose -f docker-compose.prod.yml down
+	docker compose -f docker-compose.prod.yml down
 
 docker-prod-logs:
 	docker compose -f docker-compose.dev.yml logs
