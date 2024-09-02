@@ -25,8 +25,8 @@
     "agdb-build": "yarn run build",
     "agdb-install-dev": "yarn install --immutable --immutable-cache --check-cache",
     "agdb-install-prod": "yarn install --production --frozen-lockfile && yarn cache clean",
-    "run-dev": "./bin/start-dev.sh",
-    "run-prod": "./bin/start-prod.sh"
+    "run-dev": "./scripts/start-dev.sh",
+    "run-prod": "./scripts/start-prod.sh"
   },
   "dependencies": {
     "@nestjs/axios": "^3.0.3",

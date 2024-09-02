@@ -1,0 +1,52 @@
+services:
+  mysql:
+    image: mariadb
+    environment:
+      MARIADB_USER: ${DB_USERNAME}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_DATABASE: ${DB_DATABASE}
+      MARIADB_HOST: ${DB_HOST}
+      MARIADB_PORT: ${DB_PORT}
+      MYSQL_TCP_PORT: ${DB_PORT}
+      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 2s
+      timeout: 20s
+      retries: 10
+    # Uncomment to expose the port to the host machine
+    #ports:
+    #- ${DB_PORT}:${DB_PORT}
+
+  api:
+    build:
+      dockerfile: Dockerfile
+      context: .
+      target: development
+    depends_on:
+      mysql:
+        condition: service_healthy
+    tty: true
+    command: ['/bin/sh', '/srv/root/scripts/start-dev.sh']
+    environment:
+      - API_PORT=${API_PORT}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_SYNCHRONIZE=${DB_SYNCHRONIZE}
+      - STEAM_API_KEY=${STEAM_API_KEY}
+    volumes:
+      - .:/app/
+    ports:
+      - ${API_PORT}:${API_PORT}
+
+volumes:
+  db-data:
+
+networks:
+  default:
+    name: agdb-next-network

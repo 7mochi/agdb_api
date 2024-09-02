@@ -20,16 +20,16 @@ services:
     #ports:
     #- ${DB_PORT}:${DB_PORT}
 
-  # If you want to use the container in production mode, modify the fields with XXX
   api:
     build:
       dockerfile: Dockerfile
       context: .
+      target: production
     depends_on:
       mysql:
         condition: service_healthy
     tty: true
-    command: ['/bin/sh', '/app/bin/start.sh']
+    command: ['/bin/sh', '/srv/root/scripts/start-prod.sh']
     environment:
       - API_PORT=${API_PORT}
       - DB_HOST=${DB_HOST}
