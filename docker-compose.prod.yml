@@ -39,6 +39,7 @@ services:
       - DB_DATABASE=${DB_DATABASE}
       - DB_SYNCHRONIZE=${DB_SYNCHRONIZE}
       - STEAM_API_KEY=${STEAM_API_KEY}
+      - AGDB_MASTER_KEY=${AGDB_MASTER_KEY}
     volumes:
       - /usr/src/app/node_modules
       - .:/usr/src/app
