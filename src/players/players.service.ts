@@ -104,6 +104,24 @@ export class PlayersService {
   }
 
   async register(createPlayerDto: CreatePlayerDto): Promise<Player> {
+    let wasBannedBefore = false;
+    const existingHistoryByIP = await this.historiesRepository.findOneBy({
+      ip: createPlayerDto.ip,
+    });
+
+    if (existingHistoryByIP !== null) {
+      const relatedHistories = await this.historiesRepository.find({
+        where: { ip: existingHistoryByIP.ip },
+        relations: ['player'],
+      });
+
+      relatedHistories.forEach(async (relatedHistory) => {
+        if (relatedHistory.player.isBanned) {
+          wasBannedBefore = true;
+        }
+      });
+    }
+
     const existingPlayer = await this.playersRepository.findOneBy({
       steamID: createPlayerDto.steamID,
     });
@@ -113,6 +131,7 @@ export class PlayersService {
 
     if (existingPlayer === null) {
       player.steamID = createPlayerDto.steamID;
+      player.isBanned = wasBannedBefore;
       player = await this.playersRepository.save(player);
     } else {
       player = existingPlayer;
@@ -131,5 +150,43 @@ export class PlayersService {
     }
 
     return player;
+  }
+
+  async updatePlayerBanStatus(
+    steamID: string,
+    banStatus: boolean,
+  ): Promise<any> {
+    let steamAccount;
+
+    try {
+      steamAccount = new ID(steamID);
+    } catch (error) {
+      throw new InvalidSteamIDError(steamID);
+    }
+
+    const player = await this.playersRepository.findOneOrFail({
+      where: { steamID: steamAccount.getSteamID2() },
+      relations: ['histories'],
+    });
+
+    player.isBanned = banStatus;
+    await this.playersRepository.save(player);
+
+    player.histories.forEach(async (history) => {
+      const relatedHistories = await this.historiesRepository.find({
+        where: { ip: history.ip },
+        relations: ['player'],
+      });
+
+      relatedHistories.forEach(async (relatedHistory) => {
+        relatedHistory.player.isBanned = banStatus;
+        await this.playersRepository.save(relatedHistory.player);
+      });
+    });
+
+    return {
+      steamID: player.steamID,
+      message: `The player and all their related accounts have been ${banStatus ? 'banned' : 'unbanned'}.`,
+    };
   }
 }
