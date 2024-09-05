@@ -1,7 +1,5 @@
 import { Module } from '@nestjs/common';
 import * as Joi from 'joi';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { PlayersModule } from './players/players.module';
 import { HistoriesModule } from './histories/histories.module';
 import { AuthModule } from './auth/auth.module';
@@ -26,7 +24,7 @@ import { ConfigModule } from '@nestjs/config';
     HistoriesModule,
     AuthModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
