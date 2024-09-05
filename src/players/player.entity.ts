@@ -12,8 +12,8 @@ export class Player {
   @Column({ default: false })
   isBanned: boolean;
 
-  @Column({ nullable: true })
-  banReason: string;
+  @Column({ type: String, nullable: true })
+  banReason: string | null;
 
   @OneToMany(() => History, (history) => history.player)
   histories: History[];

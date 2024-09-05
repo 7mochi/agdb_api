@@ -15,6 +15,7 @@ import { AuthGuard } from 'src/auth/auth.guard';
 import { EntityNotFoundError } from 'typeorm';
 import { InvalidSteamIDError } from './exceptions/invalid-steam-id.error';
 import { MasterKeyGuard } from './master-key.guard';
+import { BanPlayerDto } from './dto/ban-player.dto';
 
 @Controller('players')
 export class PlayersController {
@@ -46,9 +47,16 @@ export class PlayersController {
 
   @Post('/ban/:steamID')
   @UseGuards(MasterKeyGuard)
-  async banPlayer(@Param('steamID') steamID: string) {
+  async banPlayer(
+    @Param('steamID') steamID: string,
+    @Body() banPlayerDto: BanPlayerDto,
+  ) {
     try {
-      return await this.playersService.updatePlayerBanStatus(steamID, true);
+      return await this.playersService.updatePlayerBanStatus(
+        steamID,
+        true,
+        banPlayerDto,
+      );
     } catch (error) {
       if (error instanceof EntityNotFoundError) {
         throw new NotFoundException(`Player with SteamID ${steamID} not found`);

@@ -11,6 +11,7 @@ import { ConfigService } from '@nestjs/config';
 import { GetPlayerSummariesDto } from './dto/get-player-summaries.dto';
 import { InvalidSteamIDError } from './exceptions/invalid-steam-id.error';
 import { GetCountryCodeDto } from './dto/get-countrycode.dto';
+import { BanPlayerDto } from './dto/ban-player.dto';
 
 @Injectable()
 export class PlayersService {
@@ -29,6 +30,7 @@ export class PlayersService {
     return players.map((player) => ({
       steamID: player.steamID,
       isBanned: player.isBanned,
+      banReason: player.banReason,
     }));
   }
 
@@ -99,6 +101,7 @@ export class PlayersService {
       creationTime: playerSummaries.timecreated,
       latestActivity: playerSummaries.lastlogoff,
       isBanned: player.isBanned,
+      banReason: player.banReason,
       nicknames: Array.from(nicknamesSet),
     };
   }
@@ -155,6 +158,7 @@ export class PlayersService {
   async updatePlayerBanStatus(
     steamID: string,
     banStatus: boolean,
+    banPlayerDto?: BanPlayerDto,
   ): Promise<any> {
     let steamAccount;
 
@@ -170,6 +174,7 @@ export class PlayersService {
     });
 
     player.isBanned = banStatus;
+    player.banReason = banPlayerDto?.reason || null;
     await this.playersRepository.save(player);
 
     player.histories.forEach(async (history) => {
@@ -180,6 +185,7 @@ export class PlayersService {
 
       relatedHistories.forEach(async (relatedHistory) => {
         relatedHistory.player.isBanned = banStatus;
+        relatedHistory.player.banReason = banPlayerDto?.reason || null;
         await this.playersRepository.save(relatedHistory.player);
       });
     });
