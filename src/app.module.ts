@@ -5,9 +5,12 @@ import { HistoriesModule } from './histories/histories.module';
 import { AuthModule } from './auth/auth.module';
 import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
+import { ServersModule } from './servers/servers.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     ConfigModule.forRoot({
       validationSchema: Joi.object({
         DB_HOST: Joi.string().required(),
@@ -23,6 +26,7 @@ import { ConfigModule } from '@nestjs/config';
     PlayersModule,
     HistoriesModule,
     AuthModule,
+    ServersModule,
   ],
   controllers: [],
   providers: [],

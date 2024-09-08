@@ -34,6 +34,7 @@
     "@nestjs/config": "^3.2.2",
     "@nestjs/core": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/schedule": "^4.1.0",
     "@nestjs/swagger": "^7.4.0",
     "@nestjs/typeorm": "^10.0.2",
     "@node-steam/id": "^1.2.0",
@@ -42,6 +43,7 @@
     "mysql2": "^3.10.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
+    "steam-server-query-goldsrc-support": "^1.1.10",
     "swagger-themes": "^1.4.3",
     "treblle": "^1.5.1",
     "typeorm": "^0.3.20"
