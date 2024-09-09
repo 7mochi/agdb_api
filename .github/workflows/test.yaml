@@ -1,0 +1,27 @@
+name: Test Application Code
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+env:
+  API_PORT: '3000'
+  DB_HOST: 'mysql-test'
+  DB_PORT: '3306'
+  DB_USERNAME: 'agdb_user_test'
+  DB_PASSWORD: 'agdb_password_test'
+  DB_TEST_DATABASE: 'agdb_test'
+  STEAM_API_KEY: ${{ secrets.STEAM_API_KEY }}
+  AGDB_MASTER_KEY: 'agdb_master_key_test'
+
+jobs:
+  run-test-suite:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run tests
+        run: make docker-run-tests
