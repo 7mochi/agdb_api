@@ -166,7 +166,7 @@ export class PlayersController {
     },
   })
   @UseGuards(AuthGuard)
-  async create(@Body() createUserDto: CreatePlayerDto): Promise<Player> {
+  async register(@Body() createUserDto: CreatePlayerDto): Promise<Player> {
     return this.playersService.register(createUserDto);
   }
 
