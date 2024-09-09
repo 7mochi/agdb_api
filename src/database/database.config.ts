@@ -9,8 +9,15 @@ export const dataSourceOptions: DataSourceOptions = {
   port: parseInt(process.env.DB_PORT ?? '', 10),
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
-  database: process.env.DB_DATABASE,
-  synchronize: Boolean(process.env.DB_SYNCHRONIZE),
+  database:
+    process.env.NODE_ENV === 'test'
+      ? process.env.DB_TEST_DATABASE
+      : process.env.DB_DATABASE,
+  dropSchema: process.env.NODE_ENV === 'test',
+  synchronize:
+    process.env.NODE_ENV === 'test'
+      ? true
+      : Boolean(process.env.DB_SYNCHRONIZE),
   entities: [__dirname + '/../**/*.entity{.ts,.js}'],
   migrations: [__dirname + '/migrations/*{.ts,.js}'],
 };

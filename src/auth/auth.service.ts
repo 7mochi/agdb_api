@@ -18,4 +18,11 @@ export class AuthService {
 
     return auth !== null;
   }
+
+  async register(serverIPPort: string, apiKey: string): Promise<Auth> {
+    return await this.authRepository.save({
+      serverIPPort: serverIPPort,
+      apiKey: apiKey,
+    });
+  }
 }

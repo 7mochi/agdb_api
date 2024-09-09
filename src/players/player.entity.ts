@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { History } from 'src/histories/history.entity';
+import { History } from '../histories/history.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()

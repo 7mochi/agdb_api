@@ -24,3 +24,8 @@ docker-prod-logs:
 
 docker-run-migrations:
 	docker exec -it -w /usr/src/app agdb_api-api-1 yarn migration:run
+
+docker-run-tests:
+	docker compose -f docker-compose.test.yml up -d api-test mysql-test
+	docker compose -f docker-compose.test.yml exec -T api-test /usr/src/app/scripts/run-tests.sh
+	docker compose -f docker-compose.test.yml down

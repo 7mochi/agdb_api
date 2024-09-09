@@ -3,8 +3,8 @@ import { PlayersService } from './players.service';
 import { PlayersController } from './players.controller';
 import { Player } from './player.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { HistoriesModule } from 'src/histories/histories.module';
-import { AuthModule } from 'src/auth/auth.module';
+import { HistoriesModule } from '../histories/histories.module';
+import { AuthModule } from '../auth/auth.module';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule } from '@nestjs/config';
 

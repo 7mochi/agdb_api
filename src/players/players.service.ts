@@ -3,7 +3,7 @@ import { Player } from './player.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreatePlayerDto } from './dto/create-player.dto';
-import { History } from 'src/histories/history.entity';
+import { History } from '../histories/history.entity';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { ID } from '@node-steam/id';
@@ -168,22 +168,26 @@ export class PlayersService {
       relations: ['histories'],
     });
 
-    player.isBanned = banStatus;
-    player.banReason = banPlayerDto?.reason || null;
-    await this.playersRepository.save(player);
+    // Actualizamos solo los campos que necesitamos, sin incluir relaciones
+    await this.playersRepository.update(player.id, {
+      isBanned: banStatus,
+      banReason: banPlayerDto?.reason || null,
+    });
 
-    player.histories.forEach(async (history) => {
+    // Actualizamos las cuentas relacionadas con la misma IP
+    for (const history of player.histories) {
       const relatedHistories = await this.historiesRepository.find({
         where: { ip: history.ip },
         relations: ['player'],
       });
 
-      relatedHistories.forEach(async (relatedHistory) => {
-        relatedHistory.player.isBanned = banStatus;
-        relatedHistory.player.banReason = banPlayerDto?.reason || null;
-        await this.playersRepository.save(relatedHistory.player);
-      });
-    });
+      for (const relatedHistory of relatedHistories) {
+        await this.playersRepository.update(relatedHistory.player.id, {
+          isBanned: banStatus,
+          banReason: banPlayerDto?.reason || null,
+        });
+      }
+    }
 
     return {
       steamID: player.steamID,

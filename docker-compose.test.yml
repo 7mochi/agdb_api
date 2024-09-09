@@ -1,0 +1,56 @@
+services:
+  mysql-test:
+    image: mariadb
+    environment:
+      MARIADB_USER: ${DB_USERNAME}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_DATABASE: ${DB_TEST_DATABASE}
+      MARIADB_HOST: ${DB_HOST}
+      MARIADB_PORT: ${DB_PORT}
+      MYSQL_TCP_PORT: ${DB_PORT}
+      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - test-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 2s
+      timeout: 20s
+      retries: 10
+    # Uncomment to expose the port to the host machine
+    #ports:
+    #- ${DB_PORT}:${DB_PORT}
+
+  api-test:
+    build:
+      dockerfile: Dockerfile
+      context: .
+      target: development
+    depends_on:
+      mysql-test:
+        condition: service_healthy
+    tty: true
+    environment:
+      - API_PORT=${API_PORT}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_TEST_DATABASE=${DB_TEST_DATABASE}
+      - DB_SYNCHRONIZE=${DB_SYNCHRONIZE}
+      - STEAM_API_KEY=${STEAM_API_KEY}
+      - AGDB_MASTER_KEY=${AGDB_MASTER_KEY}
+      - TREBLLE_API_KEY=${TREBLLE_API_KEY}
+      - TREBLLE_PROJECT_ID=${TREBLLE_PROJECT_ID}
+    volumes:
+      - /usr/src/app/node_modules
+      - .:/usr/src/app
+    ports:
+      - ${API_PORT}:${API_PORT}
+
+volumes:
+  test-db-data:
+
+networks:
+  default:
+    name: agdb-test-network
