@@ -38,6 +38,7 @@
     "@nestjs/swagger": "^7.4.0",
     "@nestjs/typeorm": "^10.0.2",
     "@node-steam/id": "^1.2.0",
+    "apitally": "^0.9.0",
     "axios": "^1.7.7",
     "joi": "^17.13.1",
     "mysql2": "^3.10.0",
@@ -45,7 +46,6 @@
     "rxjs": "^7.8.1",
     "steam-server-query-goldsrc-support": "^1.1.10",
     "swagger-themes": "^1.4.3",
-    "treblle": "^1.5.1",
     "typeorm": "^0.3.20"
   },
   "devDependencies": {
