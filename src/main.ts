@@ -3,21 +3,21 @@ import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { SwaggerTheme, SwaggerThemeNameEnum } from 'swagger-themes';
-import { useNestTreblle } from 'treblle';
+import { useApitally } from 'apitally/nestjs';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
 
-  const treblleApiKey = configService.get('TREBLLE_API_KEY');
-  const treblleProjectId = configService.get('TREBLLE_PROJECT_ID');
+  const apitallyClientId = configService.get('APITALLY_CLIENT_ID');
+  const apitallyEnvironment = configService.get('APITALLY_ENVIRONMENT');
 
-  if (treblleApiKey && treblleProjectId) {
+  if (apitallyClientId && apitallyEnvironment) {
     const expressInstance = app.getHttpAdapter().getInstance();
 
-    useNestTreblle(expressInstance, {
-      apiKey: treblleApiKey,
-      projectId: treblleProjectId,
+    useApitally(expressInstance, {
+      clientId: apitallyClientId,
+      env: apitallyEnvironment,
     });
   }
 
