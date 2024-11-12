@@ -7,6 +7,7 @@ import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
 import { ServersModule } from './servers/servers.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { NetworkModule } from './network/network.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     HistoriesModule,
     AuthModule,
     ServersModule,
+    NetworkModule,
   ],
   controllers: [],
   providers: [],
