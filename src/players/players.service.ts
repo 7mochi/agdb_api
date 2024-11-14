@@ -120,6 +120,7 @@ export class PlayersService {
     });
 
     return {
+      steamID: player.steamID,
       isBanned: player.isBanned,
     };
   }

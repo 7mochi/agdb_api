@@ -13,5 +13,6 @@ export class PlayerResponseDto {
 }
 
 export class PlayerBanStatusDto {
+  steamID: string;
   isBanned: boolean;
 }
