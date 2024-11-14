@@ -24,7 +24,10 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { PlayerResponseDto } from './dto/player-response.dto';
+import {
+  PlayerBanStatusDto,
+  PlayerResponseDto,
+} from './dto/player-response.dto';
 
 @ApiTags('players')
 @Controller('players')
@@ -121,6 +124,40 @@ export class PlayersController {
   ): Promise<PlayerResponseDto | undefined> {
     try {
       return await this.playersService.getPlayerBySteamID(steamID);
+    } catch (error) {
+      if (error instanceof EntityNotFoundError) {
+        throw new NotFoundException(`Player with SteamID ${steamID} not found`);
+      } else if (error instanceof InvalidSteamIDError) {
+        throw new BadRequestException(`Invalid SteamID ${steamID}`);
+      }
+    }
+  }
+
+  @Get(':steamID/ban-status')
+  @ApiOperation({
+    summary: 'Get player ban status by SteamID (SteamID2, SteamID3, SteamID64)',
+  })
+  @ApiParam({
+    name: 'steamID',
+    description: 'SteamID of the player',
+    examples: {
+      SteamID2: { value: 'STEAM_0:0:11101' },
+      SteamID3: { value: '[U:1:22202]' },
+      SteamID64: { value: '76561197960287930' },
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Player ban status',
+    example: {
+      isBanned: false,
+    },
+  })
+  async getPlayerBanStatusBySteamID(
+    @Param('steamID') steamID: string,
+  ): Promise<PlayerBanStatusDto | undefined> {
+    try {
+      return await this.playersService.getPlayerBanStatusBySteamID(steamID);
     } catch (error) {
       if (error instanceof EntityNotFoundError) {
         throw new NotFoundException(`Player with SteamID ${steamID} not found`);

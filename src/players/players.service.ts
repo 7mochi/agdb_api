@@ -12,7 +12,10 @@ import { GetPlayerSummariesDto } from './dto/get-player-summaries.dto';
 import { InvalidSteamIDError } from './exceptions/invalid-steam-id.error';
 import { GetCountryCodeDto } from './dto/get-countrycode.dto';
 import { BanPlayerDto } from './dto/ban-player.dto';
-import { PlayerResponseDto } from './dto/player-response.dto';
+import {
+  PlayerBanStatusDto,
+  PlayerResponseDto,
+} from './dto/player-response.dto';
 
 @Injectable()
 export class PlayersService {
@@ -98,6 +101,26 @@ export class PlayersService {
       isBanned: player.isBanned,
       banReason: player.banReason,
       nicknames: Array.from(nicknamesSet),
+    };
+  }
+
+  async getPlayerBanStatusBySteamID(
+    steamID: string,
+  ): Promise<PlayerBanStatusDto> {
+    let steamAccount;
+
+    try {
+      steamAccount = new ID(steamID);
+    } catch (error) {
+      throw new InvalidSteamIDError(steamID);
+    }
+
+    const player = await this.playersRepository.findOneOrFail({
+      where: { steamID: steamAccount.getSteamID2() },
+    });
+
+    return {
+      isBanned: player.isBanned,
     };
   }
 

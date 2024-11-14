@@ -11,3 +11,7 @@ export class PlayerResponseDto {
   banReason?: string | null;
   nicknames: string[];
 }
+
+export class PlayerBanStatusDto {
+  isBanned: boolean;
+}
