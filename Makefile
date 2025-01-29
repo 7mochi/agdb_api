@@ -1,3 +1,6 @@
+docker-dev-build:
+	docker compose -f docker-compose.dev.yml build --no-cache
+
 docker-dev-run:
 	docker compose -f docker-compose.dev.yml up api mysql
 
@@ -9,6 +12,9 @@ docker-dev-stop:
 
 docker-dev-logs:
 	docker compose -f docker-compose.dev.yml logs
+
+docker-prod-build:
+	docker compose -f docker-compose.prod.yml build --no-cache
 
 docker-prod-run:
 	docker compose -f docker-compose.prod.yml up api mysql
